@@ -9,16 +9,19 @@ def chat_with_model(message, history):
         messages.append({"role": "assistant", "content": assistant})
     messages.append({"role": "user", "content": message})  # 添加当前用户消息
 
-    response = ollama.chat(model='granite3.1-dense:2b', messages=messages)
-    bot_message = response['message']['content']
-
-    return bot_message
+    # 使用 ollama.generate 进行流式输出
+    stream = ollama.chat(model='granite3.1-dense:2b', messages=messages, stream=True)
+    
+    # 逐块生成响应内容
+    partial_message = ""
+    for chunk in stream:
+        partial_message += chunk['message']['content']
+        yield partial_message
 
 demo = gr.ChatInterface(
     chat_with_model,
-    title="Ollama 聊天机器人",
-    description="使用本地 Ollama 模型进行对话",
     theme="soft"
 )
+
 if __name__ == "__main__":
     demo.launch()
