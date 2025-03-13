@@ -17,8 +17,9 @@ def chat_with_model(message, history):
 demo = gr.ChatInterface(
     chat_with_model,
     type="messages",
-    theme="soft"
+    theme="soft",
+    save_history=True
 )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(share=True)
