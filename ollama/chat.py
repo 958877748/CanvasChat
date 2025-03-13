@@ -2,15 +2,11 @@ import gradio as gr
 import ollama
 
 def chat_with_model(message, history):
-    # 将历史消息转换为 Ollama 期望的格式
-    messages = []
-    for human, assistant in history:
-        messages.append({"role": "user", "content": human})
-        messages.append({"role": "assistant", "content": assistant})
-    messages.append({"role": "user", "content": message})  # 添加当前用户消息
+    # 添加当前用户消息
+    history.append({"role": "user", "content": message})
 
-    # 使用 ollama.generate 进行流式输出
-    stream = ollama.chat(model='granite3.1-dense:2b', messages=messages, stream=True)
+    # 使用 ollama进行流式输出
+    stream = ollama.chat(model='granite3.1-dense:2b', messages=history, stream=True)
     
     # 逐块生成响应内容
     partial_message = ""
@@ -20,6 +16,7 @@ def chat_with_model(message, history):
 
 demo = gr.ChatInterface(
     chat_with_model,
+    type="messages",
     theme="soft"
 )
 
