@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "ollama": "^0.5.14",
+    "openai": "^4.87.3",
+    "zod-to-json-schema": "^3.24.3"
+  },
+  "type": "module"
+}

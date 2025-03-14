@@ -18,11 +18,22 @@ const root = z.object({
 });
 
 const response = await ollama.chat({
-    model: 'gemma3',
+    model: 'gemma3:1b',
     messages: [{ role: 'user', content: 'Give me a science fiction story' }],
     format: zodToJsonSchema(root),
 });
 
-console.log(response.message.content);
 const country = root.parse(JSON.parse(response.message.content));
 console.log(country);
+
+import fs from 'fs';
+
+const data = response.message.content
+
+fs.writeFile('example.json', data, (err) => {
+    if (err) {
+        console.error('Error writing to file', err);
+    } else {
+        console.log('File saved successfully!');
+    }
+});
