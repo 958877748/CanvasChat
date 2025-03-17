@@ -2,10 +2,11 @@
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
+import 'dotenv/config'
 
 const openai = new OpenAI({
     baseURL: 'https://openrouter.ai/api/v1',
-    apiKey: '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',
+    apiKey: process.env.API_KEY,
 });
 
 const root = z.object({
@@ -26,7 +27,7 @@ const root = z.object({
 const completion = await openai.beta.chat.completions.parse({
     model: "qwen/qwen2.5-vl-72b-instruct:free",
     messages: [
-        { role: "user", content: "帮我写一个科幻小说,赛博朋克风格,每一章500字左右" },
+        { role: "user", content: "帮我写一个轻小说,小说讲的是 身为程序员的我意外穿越到修仙世界" },
     ],
     response_format: zodResponseFormat(root, "root"),
 });
