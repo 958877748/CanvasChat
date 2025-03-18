@@ -67,7 +67,7 @@ main {
   font-size: 14px;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
   background: white;
   border: 1px solid #eaeaea;
   color: #333;
