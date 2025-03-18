@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .App-logo {
@@ -17,23 +18,29 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background: #ffffff;
   padding: 20px;
-  color: white;
+  color: #333;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 10;
 }
 
 .App-header h1 {
   margin: 0;
   font-size: 2rem;
+  font-weight: 600;
+  color: #1a73e8;
 }
 
 .App-header p {
   margin: 10px 0 0;
   font-size: 1rem;
+  color: #5f6368;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #1a73e8;
 }
 
 @keyframes App-logo-spin {
@@ -49,64 +56,135 @@ main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: #f8f9fa;
 }
 
 /* React Flow specific styles */
 .react-flow__node {
-  padding: 10px;
-  border-radius: 5px;
-  width: 150px;
-  font-size: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  width: 180px;
+  font-size: 14px;
   text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  background: white;
+  border: 1px solid #eaeaea;
+  color: #333;
+}
+
+.react-flow__node:hover {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
 .react-flow__node-input {
-  background: #6ede87;
+  background: white;
   color: #333;
+  border: 1px solid #1a73e8;
+  border-left: 4px solid #1a73e8;
 }
 
 .react-flow__node-default {
-  background: #ff9a9e;
+  background: white;
   color: #333;
+  border: 1px solid #34a853;
+  border-left: 4px solid #34a853;
 }
 
 .react-flow__node-output {
-  background: #6495ed;
-  color: white;
+  background: white;
+  color: #333;
+  border: 1px solid #ea4335;
+  border-left: 4px solid #ea4335;
+}
+
+.react-flow__edge-path {
+  stroke: #dadce0;
+  stroke-width: 2;
+}
+
+.react-flow__edge-path:hover {
+  stroke: #1a73e8;
+  stroke-width: 2.5;
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border: 2px solid #dadce0;
+}
+
+.react-flow__handle:hover {
+  background: #1a73e8;
+  border-color: #1a73e8;
 }
 
 .react-flow__controls {
   bottom: 20px;
   right: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: white;
+  color: #5f6368;
+  border: 1px solid #eaeaea;
+  transition: all 0.2s ease;
+}
+
+.react-flow__controls-button:hover {
+  background: #f8f9fa;
+  color: #1a73e8;
 }
 
 .react-flow__minimap {
   bottom: 20px;
   left: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eaeaea;
 }
 
 /* Custom Node Styles */
 .custom-node {
-  border: 1px solid #1a192b;
-  padding: 10px;
-  border-radius: 5px;
-  background: #f0f0f0;
-  width: 180px;
+  border: none;
+  padding: 0;
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  width: 200px;
+  border: 1px solid #fbbc04;
+  border-left: 4px solid #fbbc04;
 }
 
 .custom-node-header {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px;
   color: #333;
+  background: rgba(251, 188, 4, 0.1);
 }
 
 .custom-node-description {
-  font-size: 12px;
-  color: #777;
+  font-size: 13px;
+  color: #5f6368;
   text-align: left;
-  padding: 5px;
-  background: #fff;
-  border-radius: 3px;
-  border: 1px dashed #ccc;
+  padding: 12px;
+  background: white;
+  border-top: 1px solid #f1f3f4;
+}
+
+/* Background style */
+.react-flow__background {
+  background-color: #f8f9fa;
+}
+
+.react-flow__background-pattern {
+  color: #e8eaed;
 }

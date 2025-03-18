@@ -1,0 +1,38 @@
+{
+    "output": {
+        "filePath": "output.txt",
+        "style": "plain",
+        "parsableStyle": true,
+        "compress": false,
+        "headerText": "Custom header text",
+        "fileSummary": true,
+        "directoryStructure": true,
+        "removeComments": true,
+        "removeEmptyLines": false,
+        "topFilesLength": 10,
+        "showLineNumbers": true,
+        "copyToClipboard": false,
+        "includeEmptyDirectories": false,
+        "git": {
+            "sortByChanges": true,
+            "sortByChangesMaxCommits": 100
+        }
+    },
+    "include": [
+        "**/*"
+    ],
+    "ignore": {
+        "useGitignore": true,
+        "useDefaultPatterns": true,
+        "customPatterns": [
+            "tmp/",
+            "*.log",
+            "package-lock.json",
+            ".gitignore",
+            "repomix.config.json"
+        ]
+    },
+    "security": {
+        "enableSecurityCheck": true
+    }
+}

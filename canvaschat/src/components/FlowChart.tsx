@@ -68,10 +68,11 @@ const FlowChart = () => {
         onConnect={onConnect}
         connectionMode={ConnectionMode.Loose}
         nodeTypes={nodeTypes}
+        defaultEdgeOptions={{ type: 'straight' }}
       >
         <Controls />
         <MiniMap />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+        <Background variant={BackgroundVariant.Lines} gap={20} size={0.5} color="#e8eaed" />
       </ReactFlow>
     </div>
   );
