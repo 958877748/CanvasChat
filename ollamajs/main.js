@@ -3,23 +3,13 @@ import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 const root = z.object({
-    story: z.object({
-        title: z.string(),
-        characters: z.array(z.object({
-            name: z.string(),
-            role: z.string(),
-            experience: z.string()
-        })),
-        chapters: z.array(z.object({
-            title: z.string(),
-            content: z.string()
-        }))
-    }),
+    think: z.string(),
+    answer: z.string(),
 });
 
 const response = await ollama.chat({
-    model: 'gemma3:1b',
-    messages: [{ role: 'user', content: 'Give me a science fiction story' }],
+    model: 'gemma3',
+    messages: [{ role: 'user', content: 'How much higher will Nasdaq 100 and gold be in 10 years compared to now?' }],
     format: zodToJsonSchema(root),
 });
 
