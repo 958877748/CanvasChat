@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+    <title>五子棋</title>
+    <style>
+        body {
+            background-color: #585858;
+        }
+
+        #gobang {
+            border: 1px solid black;
+            margin: 20px;
+        }
+
+        #turn {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>五子棋</h1>
+    <canvas id="gobang" width="450" height="450"></canvas>
+    <p id="turn">轮到黑方</p>
+    <button id="restartBtn">重新开始</button>
+
+    <script>
+        const canvas = document.getElementById('gobang');
+        const context = canvas.getContext('2d');
+        const turnDisplay = document.getElementById('turn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        const gridSize = 30; // 每个格子的大小
+        const boardSize = 15; // 棋盘大小
+        let board = []; // 棋盘状态
+        let currentPlayer = 1; // 1: 黑方, 2: 白方
+        let gameEnded = false;
+
+        // 初始化棋盘
+        function initBoard() {
+            board = [];
+            for (let i = 0; i < boardSize; i++) {
+                board[i] = [];
+                for (let j = 0; j < boardSize; j++) {
+                    board[i][j] = 0; // 0: 空, 1: 黑, 2: 白
+                }
+            }
+        }
+
+        // 绘制棋盘
+        function drawBoard() {
+            context.strokeStyle = 'black';
+            for (let i = 0; i < boardSize; i++) {
+                context.beginPath();
+                context.moveTo(gridSize / 2 + i * gridSize, gridSize / 2);
+                context.lineTo(gridSize / 2 + i * gridSize, gridSize / 2 + (boardSize - 1) * gridSize);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(gridSize / 2, gridSize / 2 + i * gridSize);
+                context.lineTo(gridSize / 2 + (boardSize - 1) * gridSize, gridSize / 2 + i * gridSize);
+                context.stroke();
+            }
+        }
+
+        // 绘制棋子
+        function drawPiece(x, y, color) {
+            context.beginPath();
+            context.arc(gridSize / 2 + x * gridSize, gridSize / 2 + y * gridSize, gridSize / 2 - 2, 0, 2 * Math.PI);
+            context.fillStyle = color;
+            context.fill();
+        }
+
+        // 检查是否获胜
+        function checkWin(x, y) {
+            const player = board[x][y];
+
+            // 检查水平方向
+            let count = 1;
+            for (let i = x - 1; i >= 0 && board[i][y] === player; i--) count++;
+            for (let i = x + 1; i < boardSize && board[i][y] === player; i++) count++;
+            if (count >= 5) return true;
+
+            // 检查垂直方向
+            count = 1;
+            for (let i = y - 1; i >= 0 && board[x][i] === player; i--) count++;
+            for (let i = y + 1; i < boardSize && board[x][i] === player; i++) count++;
+            if (count >= 5) return true;
+
+            // 检查左上到右下方向
+            count = 1;
+            for (let i = x - 1, j = y - 1; i >= 0 && j >= 0 && board[i][j] === player; i--, j--) count++;
+            for (let i = x + 1, j = y + 1; i < boardSize && j < boardSize && board[i][j] === player; i++, j++) count++;
+            if (count >= 5) return true;
+
+            // 检查右上到左下方向
+            count = 1;
+            for (let i = x + 1, j = y - 1; i < boardSize && j >= 0 && board[i][j] === player; i++, j--) count++;
+            for (let i = x - 1, j = y + 1; i >= 0 && j < boardSize && board[i][j] === player; i--, j++) count++;
+            if (count >= 5) return true;
+
+            return false;
+        }
+
+        // 处理用户点击事件
+        function handleClick(event) {
+            if (gameEnded) return;
+
+            const x = Math.floor(event.offsetX / gridSize);
+            const y = Math.floor(event.offsetY / gridSize);
+
+            handleNext(x, y);
+        }
+        function handleNext(x, y) {
+            if (board[x][y] === 0) {
+                board[x][y] = currentPlayer;
+                drawPiece(x, y, currentPlayer === 1 ? 'black' : 'white');
+
+                if (checkWin(x, y)) {
+                    turnDisplay.textContent = (currentPlayer === 1 ? '黑方' : '白方') + ' 获胜!';
+                    gameEnded = true;
+                    return;
+                }
+
+                currentPlayer = 3 - currentPlayer; // 切换玩家 (1 -> 2, 2 -> 1)
+                turnDisplay.textContent = '轮到 ' + (currentPlayer === 1 ? '黑方' : '白方');
+                if (!gameEnded && currentPlayer === 2) {
+                    handleAI();
+                }
+            }
+        }
+        let format = { "type": "object", "properties": { "think": { "type": "string" }, "x": { "type": "number" }, "y": { "type": "number" } }, "required": ["think", "x", "y"], "additionalProperties": false, "$schema": "http://json-schema.org/draft-07/schema#" }
+        let messages = [
+            { role: 'system', content: '现在是在五子棋游戏中,你是用户的对手,用户下黑棋,你下白棋,0: 空, 1: 黑, 2: 白' },
+        ]
+        function handleAI(yes) {
+            messages.push({
+                role: 'user',
+                content: JSON.stringify({
+                    tip: '现在轮到你了,给出你想要下白棋的坐标',
+                    board: board
+                })
+            })
+            fetch('http://localhost:11434/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: 'llama3.1:latest',
+                    messages: messages,
+                    format: format,
+                    stream: false
+                })
+            }).then(response => {
+                return response.json()
+            }).then(v => {
+                let obj = JSON.parse(v.message.content)
+                if (board[obj.x][obj.y] === 0) {
+                    handleNext(obj.x, obj.y)
+                    console.log(obj.think)
+                } else {
+                    console.log('位置已占用', obj)
+                }
+            })
+        }
+
+        // 重新开始游戏
+        function restartGame() {
+            initBoard();
+            drawBoard();
+            currentPlayer = 1;
+            gameEnded = false;
+            turnDisplay.textContent = '轮到黑方';
+        }
+
+        // 初始化
+        initBoard();
+        drawBoard();
+
+        // 添加事件监听器
+        canvas.addEventListener('click', handleClick);
+        restartBtn.addEventListener('click', restartGame);
+    </script>
+</body>
+
+</html>
