@@ -4,6 +4,11 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import 'dotenv/config'
 
+const models = {
+    gemma3: "google/gemma-3-27b-it:free",
+    qwen25vl: "qwen/qwen2.5-vl-72b-instruct:free",
+}
+
 const openai = new OpenAI({
     baseURL: 'https://openrouter.ai/api/v1',
     apiKey: process.env.API_KEY,
@@ -25,7 +30,7 @@ const root = z.object({
 });
 
 const completion = await openai.beta.chat.completions.parse({
-    model: "qwen/qwen2.5-vl-72b-instruct:free",
+    model: models.gemma3,
     messages: [
         { role: "user", content: "帮我写一个轻小说,小说讲的是 身为程序员的我意外穿越到修仙世界" },
     ],
