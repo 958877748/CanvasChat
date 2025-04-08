@@ -4,15 +4,25 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 
 const root = z.object({
     think: z.string(),
-    answer: z.string(),
+    components: z.array({
+        name: z.string(),
+        description: z.string(),
+    }),
+    systems: z.array({
+        name: z.string(),
+        description: z.string(),
+    }),
+    summarize: z.string(),
 });
 
 const response = await ollama.chat({
     model: 'gemma3',
-    messages: [{ role: 'user', content: 'How much higher will Nasdaq 100 and gold be in 10 years compared to now?' }],
+    messages: [{ role: 'user', content: 'Design a fluid simulation system using ECS' }],
     format: zodToJsonSchema(root),
 });
 
+
+console.log(response.message.content);
 const country = root.parse(JSON.parse(response.message.content));
 console.log(country);
 
