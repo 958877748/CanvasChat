@@ -16,12 +16,14 @@ await client.connect(new StdioClientTransport({
     "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "C:/Users/Administrator/Downloads"
+        "C:/Users/guole/Downloads"
     ]
 }));
 
 const { tools } = await client.listTools();
 
+const dir = await client.callTool("list_directory", { path: "." });
+console.log("当前目录内容:", dir);
 
 // 定义提示词
 const messages = [
