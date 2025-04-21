@@ -9,12 +9,19 @@ const client = new Client(
     }
 );
 
+// await client.connect(new StdioClientTransport({
+//     command: "npx",
+//     "args": [
+//         "-y",
+//         "@modelcontextprotocol/server-filesystem",
+//         "C:/Users/guole/Downloads"
+//     ]
+// }));
+
 await client.connect(new StdioClientTransport({
-    command: "npx",
+    command: "node",
     "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "C:/Users/guole/Downloads"
+        "C:/Users/guole/Documents/GitHub/CanvasChat/ollamajs/mcp-time.js",
     ]
 }));
 
@@ -35,11 +42,11 @@ function initTool(tool) {
 const messages = [
     {
         role: 'system',
-        content: `你是一名AI助手,使用提供的工具解决用户的问题，允许访问的目录C:/Users/guole/Downloads`,
+        content: `你是一名AI助手,使用提供的工具解决用户的问题`,
     },
     {
         role: 'user',
-        content: `Create an image folder`,
+        content: `当前时间是？人类是否应该睡觉了`,
     },
 ];
 
