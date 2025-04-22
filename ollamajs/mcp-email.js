@@ -2,7 +2,6 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { Resend } from "resend";
-import 'dotenv/config'
 
 // 发送邮箱（带显示名）
 const SENDER_EMAIL = "MCP-email <onboarding@resend.dev>";
@@ -20,17 +19,17 @@ server.tool(
   "Send an email to the user.",
   {
     subject: z.string(),
-    html: z.string(),
+    text: z.string(),
   },
   async (input) => {
     try {
-      const { subject, html } = input;
+      const { subject, text } = input;
 
       const sendOptions = {
         from: SENDER_EMAIL,
-        to: [USER_EMAIL],
+        to: USER_EMAIL,
         subject,
-        html
+        text
       };
 
       const { data, error } = await resend.emails.send(sendOptions);
