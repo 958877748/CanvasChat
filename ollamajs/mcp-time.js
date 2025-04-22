@@ -11,6 +11,7 @@ const server = new McpServer({
 // 注册一个工具，名称为 get_current_time，无输入参数，返回当前时间字符串
 server.tool(
   "get_current_time",
+  "Returns the current date and time as a formatted string.",
   {}, // 无输入参数
   async () => {
     const now = new Date();
