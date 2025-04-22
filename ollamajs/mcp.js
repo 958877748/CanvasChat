@@ -3,26 +3,33 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import ollama from 'ollama';
+import fs from "fs";
 
-const client = new Client(
-    {
-        name: "example-client",
-        version: "1.0.0"
-    }
-);
+/**
+ * @type {Array<{name: string,version: string, command: string, args: string[]}>}
+ */
+const McpServerConfigs = JSON.parse(fs.readFileSync("mcp-server-config.json"));
 
-await client.connect(new StdioClientTransport({
-    command: "npx",
-    "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "C:/Users/guole/Downloads"
-    ]
-}));
+/**
+ * @type {Map<string,{client: Client, tools: Array<Tool>}>}
+ */
+const McpClients = new Map()
+for (const { name, version, command, args } of McpServerConfigs) {
+    const client = new Client({
+        name: name,
+        version: version,
+    });
+    const stdio = new StdioClientTransport({
+        command: command,
+        args: args,
+    });
+    await client.connect(stdio);
+    const { tools } = await client.listTools();
+    McpClients.set(name, { client, tools: tools });
+}
 
-const { tools } = await client.listTools();
 
-const dir = await client.callTool("list_directory", { path: "." });
+const dir = await McpClients.get("filesystem").client.callTool("list_directory", { path: "." });
 console.log("当前目录内容:", dir);
 
 // 定义提示词
