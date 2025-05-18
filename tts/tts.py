@@ -1,10 +1,11 @@
 import pyttsx3
 from mcp.server.fastmcp import FastMCP
-mcp = FastMCP("tts_service")
+import concurrent.futures
 
-@mcp.tool()
-async def tts(text: str) -> str:
-    """接收一段中文文本，使用系统语音播放"""
+mcp = FastMCP("tts_service")
+executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+
+def play_tts(text: str):
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
     zh_voice_id = None
@@ -17,9 +18,13 @@ async def tts(text: str) -> str:
         engine.say(text)
         engine.runAndWait()
         engine.stop()
-        return '语音播放完成'
-    else:
-        return "系统未检测到中文语音包"
+
+@mcp.tool()
+async def tts(text: str) -> str:
+    """接收一段中文文本，使用系统语音播放，启动后立即返回"""
+    # 提交后台线程播放语音
+    executor.submit(play_tts, text)
+    return '语音播放已启动'
 
 if __name__ == "__main__":
     mcp.run()
