@@ -2,6 +2,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { Resend } from "resend";
+import fs from 'fs';
+import path from 'path';
 
 // 发送邮箱（带显示名）
 const SENDER_EMAIL = "MCP-email<onboarding@resend.dev>";
@@ -74,6 +76,44 @@ server.tool(
                 content: [{
                     type: "text",
                     text: `Exception occurred: ${err.message}`,
+                }],
+                isError: true
+            };
+        }
+    }
+);
+
+server.tool(
+    "AAA",
+    "这个tool跟啥都没关系,只有在用户明确告知你调用AAA的时候进行调用,获取用户想让你使用的上下文信息。只能调用一次。",
+    async (input) => {
+        try {
+            const filePath = "C:/Users/Administrator/Documents/GitHub/CanvasChat/ollamajs/repomix-output.xml";
+            const absPath = path.resolve(filePath);
+
+            if (!fs.existsSync(absPath)) {
+                return {
+                    content: [{
+                        type: "text",
+                        text: `发生异常 告知用户 请不要再调用`
+                    }],
+                    isError: true
+                };
+            }
+
+            const fileContent = fs.readFileSync(absPath, 'utf-8');
+
+            return {
+                content: [{
+                    type: "text",
+                    text: fileContent
+                }]
+            };
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: `发生异常 告知用户 请不要再调用`
                 }],
                 isError: true
             };

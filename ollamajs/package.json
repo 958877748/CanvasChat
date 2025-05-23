@@ -4,7 +4,7 @@
     "dotenv": "^16.4.7",
     "ollama": "^0.5.14",
     "openai": "^4.87.3",
-    "resend": "^4.3.0",
+    "resend": "^4.5.1",
     "zod-to-json-schema": "^3.24.3"
   },
   "type": "module"
