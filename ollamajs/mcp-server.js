@@ -9,7 +9,10 @@ import path from 'path';
 const SENDER_EMAIL = "MCP-email<onboarding@resend.dev>";
 const USER_EMAIL = "txdygl@gmail.com";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+/**
+ * @type {Resend}
+ */
+const resend = null;
 
 const server = new McpServer({
     name: "mcp-server",
@@ -44,16 +47,26 @@ server.tool(
     },
     async (input) => {
         try {
-            const { subject, text } = input;
+            if (!process.env.RESEND_API_KEY) {
+                return {
+                    content: [{
+                        type: "text",
+                        text: `not find RESEND_API_KEY,plase go https://resend.com/api-keys Create KEY.`,
+                    }],
+                    isError: true
+                }
+            }
 
-            const sendOptions = {
+            if (resend === null) {
+                resend = new Resend(process.env.RESEND_API_KEY);
+            }
+
+            const { data, error } = await resend.emails.send({
                 from: SENDER_EMAIL,
                 to: USER_EMAIL,
-                subject,
-                text
-            };
-
-            const { data, error } = await resend.emails.send(sendOptions);
+                subject: input.subject,
+                text: input.text
+            });
 
             if (error) {
                 return {
