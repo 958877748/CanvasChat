@@ -1,6 +1,7 @@
 const { Node, Flow } = require('pocketflow');
 const readline = require('readline');
-const https = require('https');
+const OpenAI = require('openai');
+require('dotenv').config();
 
 // 创建读取用户输入的接口
 const rl = readline.createInterface({
@@ -8,54 +9,27 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-// 配置 API 密钥
-const DASHSCOPE_API_KEY = 'sk-a254740282314b2e84f0b33739e836ce';
-const API_URL = 'dashscope.aliyuncs.com';
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: process.env.OPENAI_BASE_URL
+});
 
-// 辅助函数：发送 HTTP POST 请求
-function callLLM(messages) {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: API_URL,
-      path: '/compatible-mode/v1/chat/completions',
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${DASHSCOPE_API_KEY}`,
-        'Content-Type': 'application/json'
-      }
-    };
-
-    const req = https.request(options, (res) => {
-      let responseData = '';
-
-      res.on('data', (chunk) => {
-        responseData += chunk;
-      });
-
-      res.on('end', () => {
-        try {
-          const parsed = JSON.parse(responseData);
-          if (parsed.choices && parsed.choices[0] && parsed.choices[0].message) {
-            resolve(parsed.choices[0].message.content);
-          } else {
-            reject(new Error('无效的响应格式'));
-          }
-        } catch (e) {
-          reject(e);
-        }
-      });
+async function callLLM(messages) {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: process.env.MODEL_NAME,
+      messages: messages,
     });
-
-    req.on('error', (error) => {
-      reject(error);
-    });
-
-    req.write(JSON.stringify({
-      model: "qwen-plus-latest",
-      messages: messages
-    }));
-    req.end();
-  });
+    
+    if (completion.choices && completion.choices[0] && completion.choices[0].message) {
+      return completion.choices[0].message.content;
+    } else {
+      throw new Error('无效的响应格式');
+    }
+  } catch (error) {
+    console.error('调用API时出错:', error);
+    throw error;
+  }
 }
 
 // 聊天节点
