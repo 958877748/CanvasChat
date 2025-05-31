@@ -9,11 +9,11 @@ const { Node } = require('pocketflow');
 class SceneFileParser extends Node {
     /**
      * 准备数据
-     * @param {{foundSceneFiles: string[]}} shared - 共享数据对象，包含待处理的场景文件列表
+     * @param {{foundFiles: string[]}} shared - 共享数据对象，包含待处理的场景文件列表
      * @returns {string} 返回要处理的文件路径
      */
     async prep(shared) {
-        return shared.foundSceneFiles.shift();
+        return shared.foundFiles.shift();
     }
 
     /**
@@ -43,7 +43,7 @@ class SceneFileParser extends Node {
         shared.parsedScenes = shared.parsedScenes || [];
         shared.parsedScenes.push([filePath, sceneData]);
         console.log(`已解析场景文件: ${filePath}`);
-        return shared.foundSceneFiles.length > 0 ? "continue" : "end";
+        return shared.foundFiles.length > 0 ? "continue" : "end";
     }
 
     /**
