@@ -9,10 +9,10 @@ class CreateJsonFile extends Node {
 
     /**
      * 准备数据
-     * @param {{parsedMaps: [string, Object][]}} shared - 共享数据对象
+     * @param {{savedJsons: [string, Object][]}} shared - 共享数据对象
      */
     async prep(shared) {
-        return [shared.jsonDir, shared.parsedMaps.shift()];
+        return [shared.jsonDir, shared.savedJsons.shift()];
     }
 
     /**
@@ -41,8 +41,8 @@ class CreateJsonFile extends Node {
      * 处理结果
      */
     async post(shared, prepRes, execRes) {
-        if (execRes) {
-            console.log(`JSON文件已创建: ${execRes}`);
+        console.log(`JSON文件已创建: ${execRes}`);
+        if (shared.savedJsons.length > 0) {
             return "continue";
         } else {
             return "end";
