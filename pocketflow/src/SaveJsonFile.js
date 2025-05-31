@@ -19,11 +19,8 @@ class CreateJsonFile extends Node {
      * 创建JSON文件
      */
     async exec([jsonDir, [filePath, jsonData]]) {
-        if (!filePath || !jsonData) {
-            return null;
-        }
         // 拿到文件名 并去除后缀
-        const fileName = path.basename(filePath).replace('.map', '.json');
+        const fileName = path.basename(filePath).replace('.sce', '.json');
         const absolutePath = path.resolve(process.cwd(), jsonDir, fileName);
 
         // 确保目录存在

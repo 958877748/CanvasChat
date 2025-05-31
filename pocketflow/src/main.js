@@ -1,7 +1,7 @@
 const { Node, Flow } = require('pocketflow');
 const { ReadFilesByExtension } = require('./ReadFilesByExtension');
 const { SceneFileParser } = require('./SceneFileParser');
-const CreateJsonFile = require('./CreateJsonFile');
+const CreateJsonFile = require('./SaveJsonFile');
 
 // 创建节点实例
 const fileReader = new ReadFilesByExtension();
